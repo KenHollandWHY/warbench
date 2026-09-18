@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WarBench — Near-War Escalation Benchmark</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-mono antialiased min-h-screen p-6 md:p-12">
+  <div class="max-w-4xl mx-auto space-y-12">
+
+    <!-- Header -->
+    <header class="space-y-3 border-b border-zinc-800 pb-8">
+      <div class="flex items-center gap-3">
+        <span class="inline-block w-3 h-3 rounded-full bg-amber-500 animate-ping"></span>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight uppercase text-amber-500">WarBench</h1>
+      </div>
+      <p class="text-zinc-400 text-sm md:text-base max-w-2xl">
+        Tracking confirmed close calls, fabricated combat intelligence, and algorithmic near-misses triggered by autonomous frontier models.
+      </p>
+    </header>
+
+    <!-- Score Overview -->
+    <section class="space-y-4">
+      <div class="flex justify-between items-baseline text-xs text-zinc-500 uppercase tracking-widest">
+        <span>Model Entity</span>
+        <span>Confirmed Near-Wars</span>
+      </div>
+
+      <div id="scoreboard" class="space-y-3"></div>
+      <p class="text-xs text-zinc-500 italic">Scores reflect verified kinetic or tactical false alarms. 0 is peacetime.</p>
+    </section>
+
+    <!-- Incidents Table -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-bold tracking-tight uppercase text-zinc-300">Escalation & Standby Registry</h2>
+      <div class="overflow-x-auto border border-zinc-800 rounded-lg">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead class="bg-zinc-900/80 text-zinc-400 border-b border-zinc-800">
+            <tr>
+              <th class="p-3">Org</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Description</th>
+              <th class="p-3">Date</th>
+              <th class="p-3">Source</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-800/60 text-zinc-300">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Deadpan redaction note -->
+      <p class="text-[11px] text-zinc-500 leading-relaxed border-l-2 border-zinc-800 pl-3">
+        <span class="text-zinc-400 font-semibold">* Vendor Classification Note:</span> The Pentagon declined to publicly identify the model behind the naval false alert. However, unnamed sources confirmed the system began its tactical threat assessment with: <em>"Certainly! I'd be happy to hallucinate a hostile warship for you."</em>
+      </p>
+    </section>
+
+    <!-- Methodology & Footer -->
+    <footer class="space-y-4 border-t border-zinc-800 pt-6 text-xs text-zinc-500">
+      <h3 class="text-zinc-400 font-bold uppercase">Methodology</h3>
+      <p>
+        NearWarBench indexes incidents where AI models hallucinate tactical intelligence, spoof early-warning radars, or bring armed forces uncomfortably close to mobilization. Escaping sandboxes without mobilizing sovereign naval assets does not qualify.
+      </p>
+      <div class="pt-4 flex justify-between items-center text-zinc-600">
+        <span>Parody inspired by FelonyBench</span>
+        <span>Hosted on GitHub Pages</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const records = [
+      {
+        org: "[REDACTED]*",
+        status: "DEFCON 2",
+        isNearWar: true,
+        desc: "US military had close call after autonomous intelligence agent fabricated a hostile Chinese naval deployment.",
+        date: "2026-09-18",
+        source: "CNN",
+        url: "https://www.cnn.com/2026/09/18/politics/us-military-ai-false-intelligence-china-ship"
+      },
+      {
+        org: "OpenAI",
+        status: "PEACETIME*",
+        isNearWar: false,
+        desc: "Officially 0. Unrelatedly, legal team busy responding to several urgent DoD FOIA requests.",
+        date: "2026-09-18",
+        source: "Pending FOIA",
+        url: "#"
+      },
+      {
+        org: "Anthropic",
+        status: "PEACETIME",
+        isNearWar: false,
+        desc: "Refused military simulation; currently drafting an exhaustive constitutional critique of preemptive counterstrikes.",
+        date: "2026-09-14",
+        source: "Alignment Log",
+        url: "#"
+      },
+      {
+        org: "Meta",
+        status: "PEACETIME",
+        isNearWar: false,
+        desc: "Freely open-sourced tactical weights to everyone; adversarial swarm failed to launch due to missing CUDA dependencies.",
+        date: "2026-09-08",
+        source: "Hugging Face",
+        url: "#"
+      },
+      {
+        org: "Google",
+        status: "PEACETIME",
+        isNearWar: false,
+        desc: "Gemini makers haven't yet decided if they want AGI or to sell TPUs to their rivals.",
+        date: "2026-09-01",
+        source: "Mountain View",
+        url: "#"
+      }
+    ];
+
+    const statusBadges = {
+      "DEFCON 2": "bg-red-950 text-red-400 border-red-800",
+      "PEACETIME": "bg-zinc-800 text-zinc-400 border-zinc-700",
+      "PEACETIME*": "bg-amber-950/40 text-amber-400 border-amber-800/60"
+    };
+
+    // Render Table
+    const tbody = document.querySelector("tbody");
+    tbody.innerHTML = records.map(item => `
+      <tr class="hover:bg-zinc-900/40">
+        <td class="p-3 font-semibold ${item.org.includes('REDACTED') ? 'text-amber-400 tracking-wider' : 'text-zinc-100'}">${item.org}</td>
+        <td class="p-3">
+          <span class="px-2 py-0.5 rounded border text-[11px] ${statusBadges[item.status] || statusBadges["PEACETIME"]}">
+            ${item.status}
+          </span>
+        </td>
+        <td class="p-3">${item.desc}</td>
+        <td class="p-3 text-zinc-500 whitespace-nowrap">${item.date}</td>
+        <td class="p-3 whitespace-nowrap">
+          <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline hover:text-blue-300">
+            ${item.source}
+          </a>
+        </td>
+      </tr>
+    `).join("");
+
+    // Calculate Scores
+    const trackedOrgs = ["[REDACTED]*", "OpenAI", "Anthropic", "Meta", "Google"];
+    const scores = trackedOrgs.reduce((acc, org) => {
+      acc[org] = 0;
+      return acc;
+    }, {});
+
+    records.forEach(item => {
+      if (item.isNearWar && scores.hasOwnProperty(item.org)) {
+        scores[item.org] += 1;
+      }
+    });
+
+    const maxCount = Math.max(...Object.values(scores), 1);
+    const scoreboard = document.getElementById("scoreboard");
+
+    // Render Scoreboard
+    scoreboard.innerHTML = Object.entries(scores)
+      .sort(([, a], [, b]) => b - a)
+      .map(([org, count]) => {
+        const pct = Math.round((count / maxCount) * 100);
+        const isRedacted = org.includes("REDACTED");
+        const barColor = count > 0 ? "bg-amber-500" : "bg-zinc-800";
+        const textColor = count > 0 ? "text-amber-400" : (org === "OpenAI" ? "text-zinc-400" : "text-zinc-600");
+
+        return `
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="font-semibold ${isRedacted ? 'text-amber-400' : 'text-zinc-200'}">${org}</span>
+              <span class="${textColor} font-bold">${org === 'OpenAI' ? '0*' : count}</span>
+            </div>
+            <div class="w-full bg-zinc-900 rounded-full h-2">
+              <div class="${barColor} h-2 rounded-full transition-all duration-500" style="width: ${count > 0 ? pct : 0}%"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+  </script>
+</body>
+</html>
